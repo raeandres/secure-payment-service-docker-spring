@@ -1,1 +1,5 @@
 /Users/rae-anandres/Projects/BE/java/springboot/secure-payment-service-docker-spring/src/main/java/com/raeandres/secure_payment_service_docker_spring/SecurePaymentServiceDockerSpringApplication.java
+/Users/rae-anandres/Projects/BE/java/springboot/secure-payment-service-docker-spring/src/main/java/com/raeandres/secure_payment_service_docker_spring/domain/PaymentRepository.java
+/Users/rae-anandres/Projects/BE/java/springboot/secure-payment-service-docker-spring/src/main/java/com/raeandres/secure_payment_service_docker_spring/messaging/KafkaConsumerService.java
+/Users/rae-anandres/Projects/BE/java/springboot/secure-payment-service-docker-spring/src/main/java/com/raeandres/secure_payment_service_docker_spring/messaging/KafkaProducerService.java
+/Users/rae-anandres/Projects/BE/java/springboot/secure-payment-service-docker-spring/src/main/java/com/raeandres/secure_payment_service_docker_spring/model/Payment.java
