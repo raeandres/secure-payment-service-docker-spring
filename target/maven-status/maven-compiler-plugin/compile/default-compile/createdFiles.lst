@@ -1,1 +1,5 @@
+com/raeandres/secure_payment_service_docker_spring/model/Payment.class
+com/raeandres/secure_payment_service_docker_spring/messaging/KafkaProducerService.class
 com/raeandres/secure_payment_service_docker_spring/SecurePaymentServiceDockerSpringApplication.class
+com/raeandres/secure_payment_service_docker_spring/messaging/KafkaConsumerService.class
+com/raeandres/secure_payment_service_docker_spring/domain/PaymentRepository.class
