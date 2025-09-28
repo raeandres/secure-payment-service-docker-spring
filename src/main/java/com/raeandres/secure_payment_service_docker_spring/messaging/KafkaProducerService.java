@@ -11,7 +11,7 @@ public class KafkaProducerService {
 
     public static final String TOPIC = "payments-events";
 
-    public void setKafkaTemplate(String message) {
+    public void sendMessage(String message) {
         this.kafkaTemplate.send(TOPIC, message);
     }
 }
