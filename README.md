@@ -203,6 +203,36 @@ src/
 └── test/                        # Unit and integration tests
 ```
 
+## Idempotent Transaction
+
+### How It Works
+```mermaid
+sequenceDiagram
+   participant Client
+   participant PaymentService
+   participant Database
+   participant Kafka
+   Client->>PaymentService: POST /payment/submit<br/>{transactionId: "txn_123", amount: 100}
+   
+   PaymentService->>Database: Check if transactionId exists
+   
+   alt Payment already exists
+       Database-->>PaymentService: Payment found
+       PaymentService-->>Client: Return existing payment (200 OK)
+   else New payment
+       Database-->>PaymentService: No payment found
+       
+       Note over PaymentService,Database: @Transactional
+       PaymentService->>Database: Save payment
+       PaymentService->>Database: Save outbox event
+       
+       PaymentService-->>Client: Return new payment (201 Created)
+       
+       Note over PaymentService,Kafka: Async processing
+       PaymentService->>Kafka: Publish payment event
+   end
+```
+
 ## 🔄 Transactional Outbox Pattern
 
 ### How It Works
