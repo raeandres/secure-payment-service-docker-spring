@@ -27,14 +27,14 @@ public class SubmitPaymentService implements Command<PaymentRequest, String> {
     @Override
     @Transactional
     public ResponseEntity<String> execute(PaymentRequest request) {
-        if (request.getTransactionId().isEmpty() || request.getReferenceId().isEmpty()) {
+        if (request.transactionId().isEmpty() || request.referenceId().isEmpty()) {
             throw new IllegalArgumentException("transaction ID and reference ID are missing");
         }
 
         PaymentEntity entity = new PaymentEntity();
-        entity.setTransactionId(request.getTransactionId());
-        entity.setAccountId(request.getAccountFrom());
-        entity.setAmount(Double.parseDouble(request.getAmount()));
+        entity.setTransactionId(request.transactionId());
+        entity.setAccountId(request.accountFrom());
+        entity.setAmount(Double.parseDouble(request.amount()));
         entity.setStatus(PaymentStatus.SUBMITTED.name());
         entity.setCreatedAt(new Date(System.currentTimeMillis()));
         entity.setModifiedAt(new Date(System.currentTimeMillis()));
