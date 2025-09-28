@@ -18,10 +18,12 @@ public class SubmitPaymentService implements Command<PaymentRequest, String> {
 
     private final PaymentRepository mRepository;
     private final OutboxService outboxService;
+    private final IdempotencyService idempotencyService;
     
-    public SubmitPaymentService(PaymentRepository repository, OutboxService outboxService) {
+    public SubmitPaymentService(PaymentRepository repository, OutboxService outboxService, IdempotencyService idempotencyService) {
        this.mRepository = repository;
        this.outboxService = outboxService;
+       this.idempotencyService = idempotencyService;
     }
 
     @Override
@@ -29,6 +31,18 @@ public class SubmitPaymentService implements Command<PaymentRequest, String> {
     public ResponseEntity<String> execute(PaymentRequest request) {
         if (request.getTransactionId().isEmpty() || request.getReferenceId().isEmpty()) {
             throw new IllegalArgumentException("transaction ID and reference ID are missing");
+        }
+
+        // Idempotency check
+        if (idempotencyService.isProcessed(request.getTransactionId())) {
+            return ResponseEntity.status(HttpStatus.OK).body("Payment already processed (idempotent)");
+        }
+
+        // Simulate database delay for testing
+        try {
+            Thread.sleep(3000); // 3 second delay
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
         }
 
         PaymentEntity entity = new PaymentEntity();
@@ -40,6 +54,9 @@ public class SubmitPaymentService implements Command<PaymentRequest, String> {
         entity.setModifiedAt(new Date(System.currentTimeMillis()));
         
         mRepository.save(entity);
+        
+        // Mark as processed after successful save
+        idempotencyService.markAsProcessed(request.getTransactionId());
         
         PaymentEvent event = new PaymentEvent(
             entity.getTransactionId(),
