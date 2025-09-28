@@ -1,0 +1,7 @@
+CREATE TABLE outbox_events (
+    id BIGSERIAL PRIMARY KEY,
+    event_type VARCHAR(255) NOT NULL,
+    payload TEXT NOT NULL,
+    processed BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
