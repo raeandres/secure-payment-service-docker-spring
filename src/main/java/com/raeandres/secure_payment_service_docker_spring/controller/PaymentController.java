@@ -1,5 +1,6 @@
 package com.raeandres.secure_payment_service_docker_spring.controller;
 
+import com.raeandres.secure_payment_service_docker_spring.model.PaymentRequest;
 import com.raeandres.secure_payment_service_docker_spring.service.ConfirmPaymentService;
 import com.raeandres.secure_payment_service_docker_spring.service.GetPaymentService;
 import com.raeandres.secure_payment_service_docker_spring.service.SubmitPaymentService;
@@ -25,8 +26,8 @@ public class PaymentController {
     }
 
     @PostMapping("/submit")
-    public ResponseEntity<String> submitPayment() {
-        return submitPaymentService.execute(null);
+    public ResponseEntity<String> submitPayment(@RequestBody PaymentRequest request) {
+        return submitPaymentService.execute(request);
     }
 
     @PostMapping("/confirm")
