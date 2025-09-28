@@ -3,8 +3,6 @@ package com.raeandres.secure_payment_service_docker_spring.controller;
 import com.raeandres.secure_payment_service_docker_spring.service.ConfirmPaymentService;
 import com.raeandres.secure_payment_service_docker_spring.service.GetPaymentService;
 import com.raeandres.secure_payment_service_docker_spring.service.SubmitPaymentService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,28 +12,31 @@ import java.util.ArrayList;
 @RequestMapping("/payment")
 public class PaymentController {
 
-    @Autowired
-    private SubmitPaymentService submitPaymentService;
+    private final SubmitPaymentService submitPaymentService;
+    private final ConfirmPaymentService confirmPaymentService;
+    private final GetPaymentService getPaymentService;
 
-    @Autowired
-    private ConfirmPaymentService confirmPaymentService;
-
-    @Autowired
-    private GetPaymentService getPaymentService;
+    public PaymentController(SubmitPaymentService submitPaymentService,
+                             ConfirmPaymentService confirmPaymentService,
+                             GetPaymentService getPaymentService) {
+        this.submitPaymentService = submitPaymentService;
+        this.confirmPaymentService = confirmPaymentService;
+        this.getPaymentService = getPaymentService;
+    }
 
     @PostMapping("/submit")
     public ResponseEntity<String> submitPayment() {
-        return submitPaymentService.execute();
+        return submitPaymentService.execute(null);
     }
 
     @PostMapping("/confirm")
     public ResponseEntity<String> confirmPayment() {
-        return confirmPaymentService.execute();
+        return confirmPaymentService.execute(null);
     }
 
     @GetMapping("/payments")
     public ResponseEntity<ArrayList<String>> getPayments() {
-        return getPaymentService.execute();
+        return getPaymentService.execute(null);
     }
 
 //    @PutMapping
