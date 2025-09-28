@@ -32,6 +32,7 @@ This microservice demonstrates modern software architecture patterns and best pr
 - **Get Payments**: Retrieve payment history and status
 
 ### Enterprise Patterns
+- **Idempotency**: Prevents duplicate payment processing using transaction IDs
 - **Transactional Outbox**: Guarantees message delivery even during system failures
 - **Event Sourcing**: Publishes payment events to Kafka for downstream processing
 - **CQRS Implementation**: Separate command and query handlers
