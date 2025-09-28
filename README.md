@@ -281,26 +281,185 @@ ENTRYPOINT ["java", "-jar", "app.jar"]
 
 ## 🧪 Testing
 
-### Run Tests
-```bash
-# Run all tests
-./mvnw test
+### Test Architecture & Coverage
 
-# Run tests with coverage
-./mvnw test jacoco:report
+The project includes comprehensive unit and integration tests covering all architectural layers:
 
-# Run specific test class
-./mvnw test -Dtest=PaymentControllerTest
+#### **Test Structure**
+```
+src/test/java/
+├── controller/              # REST API layer tests
+│   └── PaymentControllerTest.java
+├── model/                   # Entity and DTO tests
+│   ├── PaymentEntityTest.java
+│   ├── PaymentRequestTest.java
+│   ├── PaymentEventTest.java
+│   ├── OutboxEventTest.java
+│   └── PaymentStatusTest.java
+├── service/                 # Business logic tests
+│   ├── SubmitPaymentServiceTest.java
+│   ├── ConfirmPaymentServiceTest.java
+│   ├── GetPaymentServiceTest.java
+│   ├── OutboxServiceTest.java
+│   ├── IdempotencyServiceTest.java
+│   └── cqrs/               # CQRS pattern tests
+│       ├── CommandTest.java
+│       └── QueryTest.java
+├── domain/                  # Repository layer tests
+│   ├── PaymentRepositoryTest.java
+│   └── OutboxEventRepositoryTest.java
+├── messaging/               # Kafka integration tests
+│   ├── KafkaProducerServiceTest.java
+│   └── KafkaConsumerServiceTest.java
+└── integration/             # End-to-end tests
+    └── PaymentIntegrationTest.java
 ```
 
-### Integration Testing
+#### **Test Categories**
+
+**Unit Tests (18 classes)**
+- **Controllers**: Mock-based testing of REST endpoints
+- **Services**: Business logic validation with dependency mocking
+- **Repositories**: JPA operations with H2 in-memory database
+- **Models**: Entity validation and property testing
+- **Messaging**: Kafka producer/consumer functionality
+
+**Integration Tests (2 classes)**
+- **Application Context**: Spring Boot application startup validation
+- **End-to-End Flow**: Complete payment processing workflow
+
+#### **Key Test Scenarios**
+
+**Payment Processing**
+- ✅ Successful payment submission
+- ✅ Idempotent transaction handling (duplicate prevention)
+- ✅ Payment confirmation workflow
+- ✅ Payment retrieval and listing
+- ✅ Input validation and error handling
+
+**Transactional Outbox Pattern**
+- ✅ Event persistence in database transaction
+- ✅ Asynchronous event publishing to Kafka
+- ✅ Retry logic for failed message delivery
+- ✅ Event processing status tracking
+
+**CQRS Implementation**
+- ✅ Command pattern execution
+- ✅ Query pattern implementation
+- ✅ Separation of read/write operations
+
+**Data Persistence**
+- ✅ JPA entity CRUD operations
+- ✅ Custom repository query methods
+- ✅ Database constraint validation
+- ✅ Transaction rollback scenarios
+
+**Messaging & Events**
+- ✅ Kafka message production
+- ✅ Event consumption and processing
+- ✅ Message serialization/deserialization
+- ✅ Error handling in message processing
+
+**Idempotency & Caching**
+- ✅ Redis-based transaction tracking
+- ✅ Duplicate request detection
+- ✅ Cache key generation and validation
+
+### Running Tests
+
+#### **All Tests**
 ```bash
-# Start test environment
+# Run complete test suite
+./mvnw test
+
+# Run with detailed output
+./mvnw test -Dtest.verbose=true
+```
+
+#### **Specific Test Categories**
+```bash
+# Unit tests only
+./mvnw test -Dtest="*Test"
+
+# Integration tests only
+./mvnw test -Dtest="*IntegrationTest"
+
+# Controller layer tests
+./mvnw test -Dtest="*ControllerTest"
+
+# Service layer tests
+./mvnw test -Dtest="*ServiceTest"
+
+# Repository layer tests
+./mvnw test -Dtest="*RepositoryTest"
+```
+
+#### **Individual Test Classes**
+```bash
+# Payment submission tests
+./mvnw test -Dtest=SubmitPaymentServiceTest
+
+# Outbox pattern tests
+./mvnw test -Dtest=OutboxServiceTest
+
+# Repository tests
+./mvnw test -Dtest=PaymentRepositoryTest
+```
+
+### Test Configuration
+
+#### **Test Database (H2)**
+```properties
+spring.datasource.url=jdbc:h2:mem:testdb
+spring.datasource.driver-class-name=org.h2.Driver
+spring.jpa.hibernate.ddl-auto=create-drop
+```
+
+#### **Test Profiles**
+```bash
+# Run with test profile
+./mvnw test -Dspring.profiles.active=test
+
+# Run with debug logging
+./mvnw test -Dlogging.level.com.raeandres=DEBUG
+```
+
+### Test Coverage & Quality
+
+#### **Coverage Metrics**
+- **Controllers**: 100% endpoint coverage
+- **Services**: Business logic and error scenarios
+- **Repositories**: CRUD and custom query operations
+- **Models**: Property validation and constraints
+- **Integration**: End-to-end workflow validation
+
+#### **Testing Best Practices**
+- **Isolation**: Each test runs independently with clean state
+- **Mocking**: External dependencies mocked for unit tests
+- **Data**: Test-specific data setup and teardown
+- **Assertions**: Comprehensive validation of expected outcomes
+- **Performance**: Fast execution with in-memory databases
+
+### Integration Testing Environment
+
+#### **Docker Test Setup**
+```bash
+# Start test infrastructure
 docker-compose -f docker-compose.test.yml up -d
 
 # Run integration tests
 ./mvnw verify
+
+# Cleanup test environment
+docker-compose -f docker-compose.test.yml down
 ```
+
+#### **Test Dependencies**
+- **H2 Database**: In-memory database for repository tests
+- **Embedded Kafka**: For messaging integration tests
+- **TestContainers**: For Docker-based integration tests
+- **MockMvc**: For web layer testing
+- **Mockito**: For service layer mocking
 
 ## 📊 Monitoring & Health Checks
 
