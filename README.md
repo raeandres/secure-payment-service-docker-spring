@@ -281,7 +281,7 @@ ENTRYPOINT ["java", "-jar", "app.jar"]
 
 ## 🧪 Testing
 
-### Test Architecture & Coverage
+### Test Coverage
 
 The project includes comprehensive unit and integration tests covering all architectural layers:
 
