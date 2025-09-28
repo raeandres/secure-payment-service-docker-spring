@@ -1,5 +1,7 @@
 package com.raeandres.secure_payment_service_docker_spring.controller;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -10,22 +12,22 @@ import java.util.List;
 public class PaymentController {
 
     @PostMapping("/submit")
-    public String submitPayment() {
-        return "Payment Submitted!";
+    public ResponseEntity<String> submitPayment() {
+        return ResponseEntity.status(HttpStatus.OK).body("Payment Submitted!");
     }
 
     @PostMapping("/confirm")
-    public String confirmPayment() {
-        return "Payment Confirmed!";
+    public ResponseEntity<String> confirmPayment() {
+        return ResponseEntity.status(HttpStatus.CREATED).body("Payment Confirmed!");
     }
 
     @GetMapping("/payments")
-    public ArrayList<String> getPayments() {
+    public ResponseEntity<ArrayList<String>> getPayments() {
         ArrayList<String> payments = new ArrayList<>();
         for (int i = 0; i < 100; i ++) {
             payments.add(i + ":: New Payment");
         }
-        return payments;
+        return ResponseEntity.status(HttpStatus.OK).body(payments);
     }
 
 //    @PutMapping
